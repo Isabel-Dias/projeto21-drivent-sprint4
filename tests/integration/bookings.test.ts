@@ -174,6 +174,7 @@ describe('POST /booking', () => {
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({roomId});
   
       expect(response.status).toBe(httpStatus.FORBIDDEN);
+      
     });
 
     it('should respond with status 403 if the hotel room is above capacity', async () => {
@@ -193,6 +194,6 @@ describe('POST /booking', () => {
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
-    
+
   })
 })
