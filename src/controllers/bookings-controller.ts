@@ -2,6 +2,7 @@ import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import { bookingsService } from '@/services';
+import { notFoundError } from '@/errors';
 
 export async function getBookingByUser(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -14,6 +15,8 @@ export async function getBookingByUser(req: AuthenticatedRequest, res: Response)
 export async function postBooking(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { roomId } = req.body;
+
+  if(!roomId) throw notFoundError();
 
   const bookingId = await bookingsService.postBooking(userId, roomId)
 
