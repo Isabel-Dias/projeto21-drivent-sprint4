@@ -19,3 +19,9 @@ export async function createRoomWithHotelId(hotelId: number) {
     },
   });
 }
+
+export async function createHotelandRoom() {
+  const hotel = await createHotel();
+  const room = await createRoomWithHotelId(hotel.id);
+  return room;
+}
