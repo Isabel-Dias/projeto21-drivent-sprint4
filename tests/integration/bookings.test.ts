@@ -163,17 +163,18 @@ describe('POST /booking', () => {
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
-    it('should respond with status 403 if the hotel room is not found', async () => {
+    it('should respond with status 404 if the hotel room is not found', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
-      const roomId = 3;
+      
+      const roomId = 1;
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType(false, true);
       await createTicket(enrollment.id, ticketType.id, 'PAID');
   
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({roomId});
   
-      expect(response.status).toBe(httpStatus.FORBIDDEN);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
       
     });
 
@@ -194,6 +195,19 @@ describe('POST /booking', () => {
       expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
-
+    it('should respond with status 200 and return the room id if the post was sucessful', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const room = await createHotelandRoom()
+      const roomId = room.id;
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketType(false, true);
+      await createTicket(enrollment.id, ticketType.id, 'PAID');
+  
+      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({roomId});
+  
+      expect(response.status).toBe(httpStatus.OK);
+      expect(response.body).toEqual({bookingId: expect.any(Number)})
+    });
   })
 })
