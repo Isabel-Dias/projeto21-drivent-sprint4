@@ -33,7 +33,7 @@ async function postBooking(userId: number, roomId: number) {
 
   await checkRoomAvailability(room, numberOfBookings);
 
-  const booking = await bookingsRepository.create(userId, roomId)
+  const booking = await bookingsRepository.create(userId, roomId);
 
   return {bookingId: booking.id};
 }
@@ -41,7 +41,7 @@ async function postBooking(userId: number, roomId: number) {
 async function checkTicketValidity(ticketStatus: TicketStatus, includesHotel: boolean, isRemote: boolean) {
   if(ticketStatus !== 'PAID' || 
   includesHotel === false || 
-  isRemote === true) throw cannotBookRoomWithoutValidTicketError()
+  isRemote === true) throw cannotBookRoomWithoutValidTicketError();
 }
 
 async function checkRoomAvailability(room: Room, numberOfBookings: number) {
@@ -52,15 +52,12 @@ async function updateBooking(userId: number, bookingId: number, roomId: number) 
   const newRoom = await hotelRepository.findRoomById(roomId);
   if(!newRoom) throw notFoundError();
   
-  const numberOfBookings = await bookingsRepository.countByRoomId(roomId);
+  const numberOfBookings = await bookingsRepository.countByRoomId(newRoom.id);
   await checkRoomAvailability(newRoom, numberOfBookings);
-
+  
   const bookingByUser = await bookingsRepository.findByUserId(userId);
   if(!bookingByUser) throw cannotUpdateInexistentBooking();
-
-  const bookingByRoom = await bookingsRepository.findByRoomId(roomId);
-  if(!bookingByRoom) throw cannotUpdateInexistentBooking();
-
+  
   const now = new Date();
 
   const updateData = {
@@ -68,11 +65,10 @@ async function updateBooking(userId: number, bookingId: number, roomId: number) 
     updatedAt: now
   }
 
-  const updatedBooking = await bookingsRepository.update(bookingId, updateData)
+  const updatedBooking = await bookingsRepository.update(bookingId, updateData);
 
-  return {bookingId: updatedBooking.id}
+  return {bookingId: updatedBooking.id};
 }
-
 
 export const bookingsService = {
   getBooking,
