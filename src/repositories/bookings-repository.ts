@@ -11,13 +11,13 @@ async function findByUserId(userId: number) {
 
 async function findByRoomId(roomId: number) {
   return prisma.booking.findFirst({
-    where: { roomId }
+    where: { roomId },
   });
 }
 
 async function countByRoomId(roomId: number) {
   return prisma.booking.count({
-    where: { roomId }
+    where: { roomId },
   });
 }
 
@@ -25,9 +25,9 @@ async function create(userId: number, roomId: number) {
   return prisma.booking.create({
     data: {
       userId,
-      roomId
-    }
-  })
+      roomId,
+    },
+  });
 }
 
 async function update(bookingId: number, updatedFields: object) {
@@ -42,5 +42,5 @@ export const bookingsRepository = {
   findByRoomId,
   countByRoomId,
   create,
-  update
+  update,
 };
